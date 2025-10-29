@@ -45,14 +45,21 @@ export default function useAppStartup({
     cleanupTimestampedStorage();
   }, []);
 
-  /** Set the app title */
+  /** Set the app title and description */
   useEffect(() => {
     const appTitle = startupConfig?.appTitle ?? '';
-    if (!appTitle) {
-      return;
+    if (appTitle) {
+      document.title = appTitle;
+      localStorage.setItem(LocalStorageKeys.APP_TITLE, appTitle);
     }
-    document.title = appTitle;
-    localStorage.setItem(LocalStorageKeys.APP_TITLE, appTitle);
+
+    const appDescription = startupConfig?.appDescription ?? '';
+    if (appDescription) {
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) {
+        metaDesc.setAttribute('content', appDescription);
+      }
+    }
   }, [startupConfig]);
 
   /** Set the default spec's preset as default */
